@@ -8,13 +8,17 @@ crear_entorno() {
   mkdir -p "$HOME/EPNro1/salida"
   mkdir -p "$HOME/EPNro1/procesado"
   cp consolidar.sh "$HOME/EPNro1/consolidar.sh"  #Como la consigna pide que consolidar.sh este en la carpeta EPNro1, lo copio alla
-  echo "Entorno creado."
+  echo "Entorno creado"
 }
 
 # Función para correr el proceso
 correr_proceso() {
+  if pgrep -f consolidar.sh > /dev/null; then
+                echo "Ya esta corriendo"
+  else
   nohup "$HOME/EPNro1/consolidar.sh" &
-  echo "Proceso corriendo en background."
+  echo "Proceso iniciado"
+  fi
 }
 
 # Función para mostrar el listado de alumnos ordenados por número de padrón
@@ -22,16 +26,16 @@ mostrar_alumnos_ordenados() {
   if [ -f "$HOME/EPNro1/salida/$FILENAME.txt" ]; then
     sort -k1,1n "$HOME/EPNro1/salida/$FILENAME.txt"
   else
-    echo "El archivo $FILENAME.txt no existe."
+    echo "El archivo $FILENAME.txt no existe"
   fi
 }
 
 # Función para mostrar las 10 notas más altas
 mostrar_notas_altas() {
   if [ -f "$HOME/EPNro1/salida/$FILENAME.txt" ]; then
-    sort -k4,4nr "$HOME/EPNro1/salida/$FILENAME.txt" | head -n 10
+    sort -k5,5 -nr "$HOME/EPNro1/salida/$FILENAME.txt" | head -n 10
   else
-    echo "El archivo $FILENAME.txt no existe."
+    echo "El archivo $FILENAME.txt no existe"
   fi
 }
 
@@ -41,7 +45,7 @@ mostrar_datos_padron() {
   if [ -f "$HOME/EPNro1/salida/$FILENAME.txt" ]; then
     grep "^$padron" "$HOME/EPNro1/salida/$FILENAME.txt"
   else
-    echo "El archivo $FILENAME.txt no existe."
+    echo "El archivo $FILENAME.txt no existe"
   fi
 }
 
@@ -49,7 +53,7 @@ mostrar_datos_padron() {
 borrar_entorno() {
   rm -rf "$HOME/EPNro1"
   pkill -f consolidar.sh
-  echo "Entorno borrado y procesos terminados."
+  echo "Entorno borrado y procesos terminados"
 }
 
 # Borrar entorno si se usa el parámetro -d
@@ -77,7 +81,7 @@ while true; do
     4) mostrar_notas_altas ;;
     5) mostrar_datos_padron ;;
     6) exit ;;
-    *) echo "Opción inválida. Por favor, seleccione una opción válida." ;;
+    *) echo "Opción inválida. Por favor, seleccione una opción válida" ;;
   esac
 
 
